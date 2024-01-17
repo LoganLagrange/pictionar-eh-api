@@ -4,16 +4,16 @@ const sequelize = new Sequelize('database', 'username', 'password', {
   dialect: 'mysql',
 });
 
-const Users = require('./users')(sequelize, Sequelize.DataTypes);
-const Drawings = require('./drawings')(sequelize, Sequelize.DataTypes);
+const User = require('./user')(sequelize, Sequelize.DataTypes);
+const Drawing = require('./drawing')(sequelize, Sequelize.DataTypes);
 const Game = require('./game')(sequelize, Sequelize.DataTypes);
 
 // ASSOCIATIONS HAVE TO GO HERE
 
 
 const Pictionareh_db = {
-  Users,
-  Drawings,
+  User,
+  Drawing,
   Game,
   sequelize,
   Sequelize
