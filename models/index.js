@@ -11,7 +11,7 @@ const Game = require('./game')(sequelize, Sequelize.DataTypes);
 // ASSOCIATIONS HAVE TO GO HERE
 
 
-const PictionarehDB = {
+const Pictionareh_db = {
   Users,
   Drawings,
   Game,
@@ -19,4 +19,4 @@ const PictionarehDB = {
   Sequelize
 };
 
-module.exports = PictionarehDB;
+module.exports = Pictionareh_db;
