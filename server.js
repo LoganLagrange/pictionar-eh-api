@@ -11,7 +11,7 @@ const sequelize = new Sequelize({
     host: 'localhost',
     username: 'root',
     password: 'password',
-    database: 'pictionary_db',
+    database: 'pictionareh_db',
   });
 
   const Drawing = sequelize.define('Drawing', {
