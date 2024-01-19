@@ -63,82 +63,82 @@ const answerData = [{
         word: `Snow`,
     },
     {
-        word_content: `Thunder Storm`,
+        word: `Thunder Storm`,
     },
     {
-        word_content: `Rogers`,
+        word: `Rogers`,
     },
     {
-        word_content: `Maple Syrup`,
+        word: `Maple Syrup`,
     },
     {
-        word_content: `Ice hockey`,
+        word: `Ice hockey`,
     },
     {
-        word_content: `Niagara Falls`,
+        word: `Niagara Falls`,
     },
     {
-        word_content: `CN Tower`,
+        word: `CN Tower`,
     },
     {
-        word_content: `Vancouver`,
+        word: `Vancouver`,
     },
     {
-        word_content: `Canadians`,
+        word: `Canadians`,
     },
     {
-        word_content: `Tim Hortons`,
+        word: `Tim Hortons`,
     },
     {
-        word_content: `Trudeau`,
+        word: `Trudeau`,
     },
     {
-        word_content: `Polar Bears`,
+        word: `Polar Bears`,
     },
     {
-        word_content: `Eh`,
+        word: `Eh`,
     },
     {
-        word_content: `Timbits`,
+        word: `Timbits`,
     },
     {
-        word_content: `Donair`,
+        word: `Donair`,
     },
     {
-        word_content: `Hudson Bay`,
+        word: `Hudson Bay`,
     },
     {
-        word_content: `Toronto Raptors`,
+        word: `Toronto Raptors`,
     },
     {
-        word_content: `Smarties`,
+        word: `Smarties`,
     },
     {
-        word_content: `Beaver`,
+        word: `Beaver`,
     },
     {
-        word_content: `Curling`,
+        word: `Curling`,
     },
     {
-        word_content: `Lacrosse`,
+        word: `Lacrosse`,
     },
     {
-        word_content: `Pop`,
+        word: `Pop`,
     },
     {
-        word_content: `Garburator`,
+        word: `Garburator`,
     },
     {
-        word_content: `Peameal bacon`,
+        word: `Peameal bacon`,
     },
     {
-        word_content: `Ketchup Chips`,
+        word: `Ketchup Chips`,
     },
     {
-        word_content: `Butter Tarts`,
+        word: `Butter Tarts`,
     },
     {
-        word_content: `Justin Bieber`,
+        word: `Justin Bieber`,
     }
 ]
 
@@ -170,7 +170,7 @@ const seedData = async() => {
     const dbDrawing = await Drawing.bulkCreate(drawingData);
     console.table(dbDrawing.map(Drawing => Drawing.toJSON()));
 
-    await dbUsers[0].addDrawing
+    // await dbUsers[0].addDrawing
     process.exit(0);
 }
 
