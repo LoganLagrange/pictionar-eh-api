@@ -7,12 +7,12 @@ router.use(bodyParser.json());
 let Users = [];
 
 //GET: Get all users 
-app.get('/users', (req, res) => {
+router.get('/users', (req, res) => {
     res.json(Users);
   });
 
 //GET: Get one user by ID, include drawings
-app.get('/users/:id', (req, res) => {
+router.get('/users/:id', (req, res) => {
     const user_id = req.params.id;
     //logic to retreive user and drawings by ID
     const user = user.find((user) => user.id === user_id);
@@ -24,7 +24,7 @@ app.get('/users/:id', (req, res) => {
 });
 
 // POST: Signup route, creates a new user
-app.post('/signup', (req, res) => {
+router.post('/signup', (req, res) => {
     const newUser = req.body;
     //Required user fields
     if (!newUser.username || !newUser.email || !newUser.password) {
@@ -42,7 +42,7 @@ app.post('/signup', (req, res) => {
 });
 
 // POST: Login route
-app.post('/login', async(req, res) => {
+router.post('/login', async(req, res) => {
     const {username, password} = req.body;
 
     //Validate required fields
@@ -75,7 +75,7 @@ app.post('/login', async(req, res) => {
     });
 
 // DELETE: Logout route
-app.delete('/logout', (req, res) => {
+router.delete('/logout', (req, res) => {
     if (req.session) {
         //Destroy user's session
         req.session.destroy((err) => {
@@ -93,7 +93,7 @@ app.delete('/logout', (req, res) => {
 });
 
 // DELETE: Delete account route
-app.delete('/user/:id', (req, res) => {
+router.delete('/user/:id', (req, res) => {
     const userId = req.params.id;
     // Find the index of the user with the specified ID
   const userIndex = User.findIndex((user) => user.id === userId);
@@ -112,10 +112,24 @@ app.delete('/user/:id', (req, res) => {
 });
 
 // PUT: Adding profile picture
-app.put('/users/:id/profile-picture', (req, res) => {
+router.put('/users/:id/profile-picture', (req, res) => {
     const userId = req.params.id;
     const profilePictureUrl = req.body.profilePictureUrl;
 
+    // Find the user by ID
+  const user = User.find((user) => user.id === userId);
+
+   // Check if the user was found
+   if (!user) {
+    // If user not found, send a 404 Not Found response
+    return res.status(404).json({ error: 'User not found' });
+  }
+
+    // Update the user's profile picture URL
+    user.profilePictureUrl = profilePictureUrl;
+
+    // Respond with the updated user data
+    res.json({ message: 'Profile picture updated successfully', user });
 });
 
 module.exports = router;
