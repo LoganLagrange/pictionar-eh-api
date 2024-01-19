@@ -10,7 +10,7 @@ class User extends Model {
 
 User.init(
   {
-    user_id: {
+    id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
@@ -32,11 +32,7 @@ User.init(
       type: DataTypes.STRING(50),
       allowNull: false
     },
-    user_score: {
-      type: DataTypes.STRING(50),
-      allowNull: false
-    },
-    leaderboard_scores: {
+    highscore: {
       type: DataTypes.STRING(50),
       allowNull: false
     }
