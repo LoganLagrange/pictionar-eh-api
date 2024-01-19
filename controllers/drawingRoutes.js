@@ -43,4 +43,15 @@ router.get(`/:id`,(req,res) => {
     })
 })
 
+// CREATE new drawing
+router.post(`/`,(req,res) => {
+    Drawing.create({
+        filename:req.body.filename
+    }).then(dbDrawing => {
+        res.json(dbDrawing)
+    }).catch(err => {
+        res.status(500).json({msg:`Server error!`,err});
+    })
+});
+
 module.exports = router;
