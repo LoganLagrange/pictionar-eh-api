@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const { User } = require("../models"); //Imports user model
 const bcrypt = require("bcrypt");
-const { UUIDV4 } = require("sequelize");
 
 router.use(bodyParser.json());
 let Users = [];
@@ -39,24 +38,7 @@ app.post('/signup', (req, res) => {
     if (existingUser) {
         return res.status(400).json({error: 'Username or email is already in use.'});
     }
-    //Assign a unique ID to the new user (uuid)
-    newUser.id = uuid.v4();
-
-    //Hash password using bcrypt
-    try {
-        const hashedPassword = await bcrypt.hash(newUser.password, 10);
-        newUser.password = hashedPassword;
-
-    //Add user to the user array/database
-    users.push(newUser);
-
-    //Respond to new user
-  res.status(201).json(newUser);
-} catch (error) {
-    // Handle any errors that occur during password hashing
-    console.error('Error hashing password:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
+    
 });
 
 // POST: Login route
@@ -81,10 +63,5 @@ app.put('/users/:id/profile-picture', (req, res) => {
     const profilePictureUrl = req.body.profilePictureUrl;
 
 });
-
-// Start the server
-app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
-  });
 
 module.exports = router;
