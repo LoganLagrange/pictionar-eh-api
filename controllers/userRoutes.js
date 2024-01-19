@@ -76,7 +76,20 @@ app.post('/login', async(req, res) => {
 
 // DELETE: Logout route
 app.delete('/logout', (req, res) => {
-
+    if (req.session) {
+        //Destroy user's session
+        req.session.destroy((err) => {
+            if (err) {
+                console.error('Error destroying session:', err);
+                return res.status(500).json({ error: 'Internal Server Error' });
+              }
+            // Respond with a success message
+            res.status(200).json({ message: 'Logout successful' });
+        });
+    } else {
+      // If there's no session, respond with an error
+      res.status(400).json({ error: 'No active session to logout from' });
+    }
 });
 
 // DELETE: Delete account route
