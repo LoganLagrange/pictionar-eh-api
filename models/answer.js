@@ -1,7 +1,7 @@
 const {Model, Datatypes} = require("sequelize");
 const sequelize = require('../config/connection');
 
-class Drawing extends Model {};
+class Answer extends Model {};
 
 Answer.init(
   {
