@@ -3,22 +3,22 @@ const { user, drawing, answer } = require(`../models`);
 
 const userData = [{
         username: `Logan`,
-        user_email: `logan@gmail.com`,
         password: `123456789`,
+        email: `logan@gmail.com`,
     },
     {
         username: `Maria`,
-        user_email: `maria@gmail.com`,
         password: `123456789`,
+        email: `maria@gmail.com`,
     },
     {
         username: `Thom`,
-        user_email: `thom@gmail.com`,
         password: `123456789`,
+        email: `thom@gmail.com`,
     }, {
         username: `Vinit`,
-        user_email: `vinit@gmail.com`,
         password: `123456789`,
+        email: `vinit@gmail.com`,
     }
 ]
 
@@ -141,3 +141,37 @@ const answerData = [{
         word_content: `Justin Bieber`,
     }
 ]
+
+const drawingData = [{
+        filename: "test1.svg",
+    },
+    {
+        filename: "test2.svg",
+    },
+    {
+        filename: "test3.svg",
+    },
+    {
+        filename: "test4.svg",
+    }
+]
+
+const seedData = async() => {
+    await sequelize.sync({ force: true });
+
+    const dbUsers = await user.bulkCreate(userData, {
+        individualHoooks: true
+    });
+    console.table(dbUsers.map(user => user.toJSON()));
+
+    const dbAnswer = await answer.bulkCreate(answerData);
+    console.table(dbAnswer.map(answer => answer.toJSON()));
+
+    const dbDrawing = await drawing.bulkCreate(drawingData);
+    console.table(dbDrawing.map(drawing => drawing.toJSON()));
+
+    process.exit(0);
+}
+
+seedData();
+git

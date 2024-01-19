@@ -27,12 +27,12 @@ app.get('/users/:id', (req, res) => {
 app.post('/signup', (req, res) => {
     const newUser = req.body;
     //Required user fields
-    if (!newUser.user_name || !newUser.user_email || !newUser.user_password) {
+    if (!newUser.username || !newUser.email || !newUser.password) {
         return res.status(400).json({error:'Username, email, and password are required'});
     } 
 
     const existingUser = user.find(
-        (user) => user.user_name === newUser.user_name || user.user_email === newUser.user_email
+        (user) => user.username === newUser.username || user.email === newUser.email
     );
 
     if (existingUser) {
@@ -42,19 +42,73 @@ app.post('/signup', (req, res) => {
 });
 
 // POST: Login route
-app.post('/login', (req, res) => {
+app.post('/login', async(req, res) => {
+    const {username, password} = req.body;
 
-});
+    //Validate required fields
+    if (!username || !password) {
+        return res.status(400).json({ error: 'Username and password are required'});
+    }
+
+    //Find user by username
+    const user = user.find((user) => user.username == username);
+
+    if(!user) {
+        return res.status(401).json({ error: 'Invalid username or password'});
+    }
+
+    try {
+        // Compare provided password with hashed
+        const passwordMatch = user.PasswordAuth(password);
+
+        if (passwordMatch) {
+            res.json({ message: 'Login successful' });
+        } else {
+            // Incorrect password
+            res.status(401).json({ error: 'Invalid username or password' });
+            }
+        } catch (error) {
+            // Handle any errors that might occur during password comparison
+            console.error('Error comparing passwords:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+          }
+    });
 
 // DELETE: Logout route
 app.delete('/logout', (req, res) => {
-
+    if (req.session) {
+        //Destroy user's session
+        req.session.destroy((err) => {
+            if (err) {
+                console.error('Error destroying session:', err);
+                return res.status(500).json({ error: 'Internal Server Error' });
+              }
+            // Respond with a success message
+            res.status(200).json({ message: 'Logout successful' });
+        });
+    } else {
+      // If there's no session, respond with an error
+      res.status(400).json({ error: 'No active session to logout from' });
+    }
 });
 
 // DELETE: Delete account route
-app.delete('/users/:id', (req, res) => {
+app.delete('/user/:id', (req, res) => {
     const userId = req.params.id;
+    // Find the index of the user with the specified ID
+  const userIndex = User.findIndex((user) => user.id === userId);
 
+  // Check if the user was found
+  if (userIndex === -1) {
+    // If user not found, send a 404 Not Found response
+    return res.status(404).json({ error: 'User not found' });
+  }
+
+    // Remove the user from the users array
+  const deletedUser = User.splice(userIndex, 1)[0];
+
+     // Respond with a success message and the deleted user data
+  res.json({ message: 'Account deleted successfully', deletedUser });
 });
 
 // PUT: Adding profile picture
