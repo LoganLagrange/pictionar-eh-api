@@ -1,3 +1,6 @@
+const {Model, Datatypes} = require("sequelize");
+const sequelize = require('../config/connection');
+
 module.exports = (sequelize, DataTypes) => {
     const Drawing = sequelize.define('Drawings', {
       svg_id: {
