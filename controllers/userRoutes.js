@@ -27,12 +27,12 @@ app.get('/users/:id', (req, res) => {
 app.post('/signup', (req, res) => {
     const newUser = req.body;
     //Required user fields
-    if (!newUser.user_name || !newUser.user_email || !newUser.user_password) {
+    if (!newUser.username || !newUser.email || !newUser.password) {
         return res.status(400).json({error:'Username, email, and password are required'});
     } 
 
     const existingUser = user.find(
-        (user) => user.user_name === newUser.user_name || user.user_email === newUser.user_email
+        (user) => user.username === newUser.username || user.email === newUser.email
     );
 
     if (existingUser) {
@@ -42,9 +42,37 @@ app.post('/signup', (req, res) => {
 });
 
 // POST: Login route
-app.post('/login', (req, res) => {
+app.post('/login', async(req, res) => {
+    const {username, password} = req.body;
 
-});
+    //Validate required fields
+    if (!username || !password) {
+        return res.status(400).json({ error: 'Username and password are required'});
+    }
+
+    //Find user by username
+    const user = user.find((user) => user.username == username);
+
+    if(!user) {
+        return res.status(401).json({ error: 'Invalid username or password'});
+    }
+
+    try {
+        // Compare provided password with hashed
+        const passwordMatch = user.PasswordAuth(password);
+
+        if (passwordMatch) {
+            res.json({ message: 'Login successful' });
+        } else {
+            // Incorrect password
+            res.status(401).json({ error: 'Invalid username or password' });
+            }
+        } catch (error) {
+            // Handle any errors that might occur during password comparison
+            console.error('Error comparing passwords:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+          }
+    });
 
 // DELETE: Logout route
 app.delete('/logout', (req, res) => {
