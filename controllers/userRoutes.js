@@ -76,13 +76,39 @@ app.post('/login', async(req, res) => {
 
 // DELETE: Logout route
 app.delete('/logout', (req, res) => {
-
+    if (req.session) {
+        //Destroy user's session
+        req.session.destroy((err) => {
+            if (err) {
+                console.error('Error destroying session:', err);
+                return res.status(500).json({ error: 'Internal Server Error' });
+              }
+            // Respond with a success message
+            res.status(200).json({ message: 'Logout successful' });
+        });
+    } else {
+      // If there's no session, respond with an error
+      res.status(400).json({ error: 'No active session to logout from' });
+    }
 });
 
 // DELETE: Delete account route
-app.delete('/users/:id', (req, res) => {
+app.delete('/user/:id', (req, res) => {
     const userId = req.params.id;
+    // Find the index of the user with the specified ID
+  const userIndex = User.findIndex((user) => user.id === userId);
 
+  // Check if the user was found
+  if (userIndex === -1) {
+    // If user not found, send a 404 Not Found response
+    return res.status(404).json({ error: 'User not found' });
+  }
+
+    // Remove the user from the users array
+  const deletedUser = User.splice(userIndex, 1)[0];
+
+     // Respond with a success message and the deleted user data
+  res.json({ message: 'Account deleted successfully', deletedUser });
 });
 
 // PUT: Adding profile picture
