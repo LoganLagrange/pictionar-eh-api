@@ -55,7 +55,7 @@ router.post(`/`,(req,res) => {
 });
 
 // DELETE drawing
-router.delete(`/:id`, userAuth, (req,res) => {
+router.delete(`/:id`, (req,res) => {
     Drawing.destroy({
         where: {
             id:req.params.id

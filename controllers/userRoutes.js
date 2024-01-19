@@ -3,16 +3,16 @@ const router = express.Router();
 const { User } = require("../models"); //Imports user model
 const bcrypt = require("bcrypt");
 
-router.use(bodyParser.json());
+// router.use(bodyParser.json());
 let Users = [];
 
 //GET: Get all users 
-app.get('/users', (req, res) => {
+router.get('/users', (req, res) => {
     res.json(Users);
   });
 
 //GET: Get one user by ID, include drawings
-app.get('/users/:id', (req, res) => {
+router.get('/users/:id', (req, res) => {
     const user_id = req.params.id;
     //logic to retreive user and drawings by ID
     const user = user.find((user) => user.id === user_id);
@@ -24,7 +24,7 @@ app.get('/users/:id', (req, res) => {
 });
 
 // POST: Signup route, creates a new user
-app.post('/signup', (req, res) => {
+router.post('/signup', (req, res) => {
     const newUser = req.body;
     //Required user fields
     if (!newUser.username || !newUser.email || !newUser.password) {
@@ -42,7 +42,7 @@ app.post('/signup', (req, res) => {
 });
 
 // POST: Login route
-app.post('/login', async(req, res) => {
+router.post('/login', async(req, res) => {
     const {username, password} = req.body;
 
     //Validate required fields
@@ -75,18 +75,18 @@ app.post('/login', async(req, res) => {
     });
 
 // DELETE: Logout route
-app.delete('/logout', (req, res) => {
+router.delete('/logout', (req, res) => {
 
 });
 
 // DELETE: Delete account route
-app.delete('/users/:id', (req, res) => {
+router.delete('/users/:id', (req, res) => {
     const userId = req.params.id;
 
 });
 
 // PUT: Adding profile picture
-app.put('/users/:id/profile-picture', (req, res) => {
+router.put('/users/:id/profile-picture', (req, res) => {
     const userId = req.params.id;
     const profilePictureUrl = req.body.profilePictureUrl;
 
