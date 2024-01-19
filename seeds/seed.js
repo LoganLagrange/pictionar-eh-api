@@ -1,5 +1,5 @@
 const sequelize = require(`../config/connection`);
-const { user, drawing, answer } = require(`../models`);
+const { User, Drawing, Answer } = require(`../models`);
 
 const userData = [{
         username: `Logan`,
@@ -23,44 +23,44 @@ const userData = [{
 ]
 
 const answerData = [{
-        word_content: `Loonie`
+        word: `Loonie`
     }, {
-        word_content: `Toonie`,
+        word: `Toonie`,
     },
     {
-        word_content: `Double Double`,
+        word: `Double Double`,
     },
     {
-        word_content: `Poutine`,
+        word: `Poutine`,
     },
     {
-        word_content: `Timmies`,
+        word: `Timmies`,
     },
     {
-        word_content: `Chesterfield`,
+        word: `Chesterfield`,
     },
     {
-        word_content: `Mountie`,
+        word: `Mountie`,
     },
     {
-        word_content: `Nanaimo bar`,
+        word: `Nanaimo bar`,
     },
     {
-        word_content: `Caeser`,
+        word: `Caeser`,
     },
     {
-        word_content: `Parka`,
+        word: `Parka`,
     },
     {
-        word_content: `hydro`,
+        word: `hydro`,
     },
     {
-        word_content: `Tuque`,
+        word: `Tuque`,
     },
     {
-        word_content: `Toronto`,
+        word: `Toronto`,
     }, {
-        word_content: `Snow`,
+        word: `Snow`,
     },
     {
         word_content: `Thunder Storm`,
@@ -159,19 +159,19 @@ const drawingData = [{
 const seedData = async() => {
     await sequelize.sync({ force: true });
 
-    const dbUsers = await user.bulkCreate(userData, {
+    const dbUsers = await User.bulkCreate(userData, {
         individualHoooks: true
     });
-    console.table(dbUsers.map(user => user.toJSON()));
+    console.table(dbUsers.map(User => User.toJSON()));
 
-    const dbAnswer = await answer.bulkCreate(answerData);
-    console.table(dbAnswer.map(answer => answer.toJSON()));
+    const dbAnswer = await Answer.bulkCreate(answerData);
+    console.table(dbAnswer.map(Answer => Answer.toJSON()));
 
-    const dbDrawing = await drawing.bulkCreate(drawingData);
-    console.table(dbDrawing.map(drawing => drawing.toJSON()));
+    const dbDrawing = await Drawing.bulkCreate(drawingData);
+    console.table(dbDrawing.map(Drawing => Drawing.toJSON()));
 
+    await dbUsers[0].addDrawing
     process.exit(0);
 }
 
 seedData();
-git
