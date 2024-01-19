@@ -28,6 +28,19 @@ router.get(`/inconvo/:id`, (req,res) => {
     })
 })
 
-
+// GET one drawing
+router.get(`/:id`,(req,res) => {
+    Drawing.findByPk(req.params.id,{
+        include:[User]
+    }).then(dbDrawing => {
+       if(!dbDrawing) {
+        return res.status(404).json(`No drawing exists!`)
+       }
+       res.json(dbDrawing)
+    }).catch(err => {
+        res.status(500).json({msg:`Server Error!`, err});
+        console.log(err);
+    })
+})
 
 module.exports = router;
