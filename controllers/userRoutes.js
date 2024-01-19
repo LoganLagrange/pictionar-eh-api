@@ -116,7 +116,7 @@ router.delete('/user/:id', (req, res) => {
 });
 
 // PUT: Adding profile picture
-router.put('/users/:id/profile-picture', (req, res) => {
+router.put('/user/:id/profile-picture', (req, res) => {
     const userId = req.params.id;
     const profilePictureUrl = req.body.profilePictureUrl;
 
