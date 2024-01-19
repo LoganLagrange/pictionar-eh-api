@@ -12,7 +12,7 @@ router.get(`/`,(req,res) => {
 })
 
 // GET all drawings for given user
-router.get(`/inconvo/:id`, (req,res) => {
+router.get(`/userdraw/:id`, (req,res) => {
     Drawing.findAll({
         where: {
             userId: req.params.userId
@@ -53,5 +53,19 @@ router.post(`/`,(req,res) => {
         res.status(500).json({msg:`Server error!`,err});
     })
 });
+
+// DELETE drawing
+router.delete(`/:id`, userAuth, (req,res) => {
+    Drawing.destroy({
+        where: {
+            id:req.params.id
+        }
+    }).then(dbDrawing => {
+        res.json(dbDrawing)
+    }).catch(err => {
+        res.status(500).json({msg:`Server error!`,err})
+    })
+});
+
 
 module.exports = router;
