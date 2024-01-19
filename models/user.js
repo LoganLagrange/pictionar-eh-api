@@ -24,17 +24,21 @@ User.init(
       type: DataTypes.STRING(50),
       allowNull: false
     },
+    email: {
+      type: Datatypes.STRING(50),
+      allowNull:true
+    },
     profile_picture: {
       type: DataTypes.STRING(50),
-      allowNull: false
+      allowNull: true
     },
     friends: {
       type: DataTypes.STRING(50),
-      allowNull: false
+      allowNull: true
     },
     highscore: {
       type: DataTypes.STRING(50),
-      allowNull: false
+      allowNull: true
     }
   },
   {
