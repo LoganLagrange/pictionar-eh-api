@@ -31,7 +31,7 @@ router.get(`/userdraw/:id`, (req,res) => {
 // GET one drawing
 router.get(`/:id`,(req,res) => {
     Drawing.findByPk(req.params.id,{
-        include:[User]
+        // include:[User]
     }).then(dbDrawing => {
        if(!dbDrawing) {
         return res.status(404).json(`No drawing exists!`)
@@ -45,8 +45,11 @@ router.get(`/:id`,(req,res) => {
 
 // CREATE new drawing
 router.post(`/`,(req,res) => {
+    console.log(req.body)
     Drawing.create({
-        filename:req.body.filename
+        filename:req.body.filename,
+        userId: req.body.userId,
+        answerId: req.body.answerId
     }).then(dbDrawing => {
         res.json(dbDrawing)
     }).catch(err => {

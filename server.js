@@ -6,10 +6,12 @@ const sequelize = require("./config/connection");
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+app.use(express.json());
+
 const allRoutes = require("./controllers");
 app.use(allRoutes);
 
-app.use(express.json());
+
 
 // Start the server
 sequelize.sync({ force: false }).then(function () {
