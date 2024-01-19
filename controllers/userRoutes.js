@@ -93,9 +93,22 @@ app.delete('/logout', (req, res) => {
 });
 
 // DELETE: Delete account route
-app.delete('/users/:id', (req, res) => {
+app.delete('/user/:id', (req, res) => {
     const userId = req.params.id;
+    // Find the index of the user with the specified ID
+  const userIndex = User.findIndex((user) => user.id === userId);
 
+  // Check if the user was found
+  if (userIndex === -1) {
+    // If user not found, send a 404 Not Found response
+    return res.status(404).json({ error: 'User not found' });
+  }
+
+    // Remove the user from the users array
+  const deletedUser = User.splice(userIndex, 1)[0];
+
+     // Respond with a success message and the deleted user data
+  res.json({ message: 'Account deleted successfully', deletedUser });
 });
 
 // PUT: Adding profile picture
