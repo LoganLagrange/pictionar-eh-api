@@ -8,12 +8,10 @@ let Users = [];
 
 //GET: Get all users 
 router.get('/users', (req, res) => {
-router.get('/users', (req, res) => {
     res.json(Users);
   });
 
 //GET: Get one user by ID, include drawings
-router.get('/users/:id', (req, res) => {
 router.get('/users/:id', (req, res) => {
     const user_id = req.params.id;
     //logic to retreive user and drawings by ID
@@ -26,7 +24,6 @@ router.get('/users/:id', (req, res) => {
 });
 
 // POST: Signup route, creates a new user
-router.post('/signup', (req, res) => {
 router.post('/signup', (req, res) => {
     const newUser = req.body;
     //Required user fields
@@ -45,7 +42,6 @@ router.post('/signup', (req, res) => {
 });
 
 // POST: Login route
-router.post('/login', async(req, res) => {
 router.post('/login', async(req, res) => {
     const {username, password} = req.body;
 
