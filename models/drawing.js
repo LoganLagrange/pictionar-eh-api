@@ -15,6 +15,9 @@ Drawing.init(
       type: DataTypes.STRING(50),
       allowNull: false
     }
+  },
+  {
+    sequelize
   }
 )
 
