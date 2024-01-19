@@ -11,6 +11,23 @@ router.get(`/`,(req,res) => {
     })
 })
 
+// GET all drawings for given user
+router.get(`/inconvo/:id`, (req,res) => {
+    Drawing.findAll({
+        where: {
+            userId: req.params.userId
+        },
+        include:[{
+            model: User,
+            attributes: [`username`],
+        }]
+    }).then(dbDrawing => {
+        res.json({dbDrawing,userId});
+    }).catch(err => {
+        res.status(500).json({msg:`Server Error!`, err});
+    })
+})
+
 
 
 module.exports = router;
