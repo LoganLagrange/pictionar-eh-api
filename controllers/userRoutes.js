@@ -164,4 +164,17 @@ router.post('/', (req, res) => {
     })
 })
 
+// DELETE user
+router.delete('/:id', (req, res) => {
+    User.destroy({
+        where: {
+            id:req.params.id
+        }
+    }).then(dbUser => {
+        res.json(dbUser);
+    }).catch(err => {
+        res.status(500).json({msg:`Server error!`,err});
+    })
+})
+
 module.exports = router;
