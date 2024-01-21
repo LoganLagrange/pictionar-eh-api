@@ -11,6 +11,15 @@ router.get(`/`,(req,res) => {
     })
 })
 
+// GET random answer
+router.get('/random', (req, res) => {
+    Answer.findAll().then(dbAnswers => {
+        res.json(dbAnswers[Math.floor(Math.random() * dbAnswers.length)])
+    }).catch(err => {
+        res.status(500).json({msg:`Server Error!`, err});
+    })
+})
+
 // GET one answer by id
 router.get(`/:id`,(req,res) => {
     Answer.findByPk(req.params.id,{
@@ -50,15 +59,6 @@ router.delete(`/:id`, (req,res) => {
         res.status(500).json({msg:`Server error!`,err})
     })
 });
-
-// GET random answer
-router.get('/random', (req, res) => {
-    Answer.findAll().then(dbAnswers => {
-        res.json(dbAnswers[Math.floor(Math.random() * dbAnswers.length)])
-    }).catch(err => {
-        res.status(500).json({msg:`Server Error!`, err});
-    })
-})
 
 // UPDATE answer
 router.put('/:id', (req, res)  => {
