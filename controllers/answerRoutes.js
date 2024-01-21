@@ -62,7 +62,7 @@ router.delete(`/:id`, (req,res) => {
 
 // UPDATE answer
 router.put('/:id', (req, res)  => {
-    updatedData = {
+    const updatedData = {
         word: req.body.word
     }
     Answer.update(updatedData, {

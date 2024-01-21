@@ -3,133 +3,133 @@ const router = express.Router();
 const { User } = require("../models"); //Imports user model
 const bcrypt = require("bcrypt");
 
-// router.use(bodyParser.json());
-let Users = [];
+// GET all users
+router.get("/", (req, res) => {
+    User.findAll().then(dbUsers => {
+        res.json(dbUsers);
+    }).catch(err => {
+        res.status(500).json({msg:`Server Error!`, err});
+    })
+})
 
-//GET: Get all users 
-router.get('/users', (req, res) => {
-    res.json(Users);
-  });
+// GET one user
+router.get('/:id', (req, res) => {
+    User.findByPk(req.params.id, {
+    }).then(dbUser => {
+        res.json(dbUser);
+    }).catch(err => {
+        res.status(500).json({msg:`Server Error!`, err});
+    })
+})
 
-//GET: Get one user by ID, include drawings
-router.get('/users/:id', (req, res) => {
-    const user_id = req.params.id;
-    //logic to retreive user and drawings by ID
-    const user = user.find((user) => user.id === user_id);
-    if(!user) {
-        return res.status(404).json({ error: 'User not found'});
-    }
-    const drawings = user.drawings || [];
-    res.json({user, drawings});
-});
+// CREATE new user
+router.post('/', (req, res) => {
+    console.log(req.body);
+    User.create({
+        username:req.body.username,
+        email:req.body.email,
+        password:req.body.password
+    }).then(newUser => {
+        res.json(newUser);
+    }).catch(err => {
+        console.log("error creating user:", err)
+        res.status(500).json({msg:`Server error!`,err});
+    })
+})
 
-// POST: Signup route, creates a new user
-router.post('/signup', (req, res) => {
-    const newUser = req.body;
-    //Required user fields
-    if (!newUser.username || !newUser.email || !newUser.password) {
-        return res.status(400).json({error:'Username, email, and password are required'});
-    } 
-
-    const existingUser = user.find(
-        (user) => user.username === newUser.username || user.email === newUser.email
-    );
-
-    if (existingUser) {
-        return res.status(400).json({error: 'Username or email is already in use.'});
-    }
-    
-});
-
-// POST: Login route
-router.post('/login', async(req, res) => {
-    const {username, password} = req.body;
-
-    //Validate required fields
-    if (!username || !password) {
-        return res.status(400).json({ error: 'Username and password are required'});
-    }
-
-    //Find user by username
-    const user = user.find((user) => user.username == username);
-
-    if(!user) {
-        return res.status(401).json({ error: 'Invalid username or password'});
-    }
-
-    try {
-        // Compare provided password with hashed
-        const passwordMatch = user.PasswordAuth(password);
-
-        if (passwordMatch) {
-            res.json({ message: 'Login successful' });
-        } else {
-            // Incorrect password
-            res.status(401).json({ error: 'Invalid username or password' });
-            }
-        } catch (error) {
-            // Handle any errors that might occur during password comparison
-            console.error('Error comparing passwords:', error);
-            res.status(500).json({ error: 'Internal Server Error' });
-          }
-    });
-
-// DELETE: Logout route
+// LOGOUT route
 router.delete('/logout', (req, res) => {
-    if (req.session) {
-        //Destroy user's session
-        req.session.destroy((err) => {
-            if (err) {
-                console.error('Error destroying session:', err);
-                return res.status(500).json({ error: 'Internal Server Error' });
-              }
-            // Respond with a success message
-            res.status(200).json({ message: 'Logout successful' });
-        });
-    } else {
-      // If there's no session, respond with an error
-      res.status(400).json({ error: 'No active session to logout from' });
+    if(req.session) {
+        req.session.destroy(err => {
+            if(!err) {
+                res.status(200).json({msg: "Logged out!"})
+            } else {
+                res.status(500).json({msg: "Server error!", err})
+            }
+        })
     }
-});
+})
 
-// DELETE: Delete account route
-router.delete('/user/:id', (req, res) => {
-    const userId = req.params.id;
-    // Find the index of the user with the specified ID
-  const userIndex = User.findIndex((user) => user.id === userId);
+// DELETE user
+router.delete('/:id', (req, res) => {
+    User.destroy({
+        where: {
+            id:req.params.id
+        }
+    }).then(dbUser => {
+        res.json(dbUser);
+    }).catch(err => {
+        res.status(500).json({msg:`Server error!`,err});
+    })
+})
 
-  // Check if the user was found
-  if (userIndex === -1) {
-    // If user not found, send a 404 Not Found response
-    return res.status(404).json({ error: 'User not found' });
-  }
+// UPDATE user route
+router.put('/:id', (req, res) => {
+    User.findByPk(req.params.id)
+    .then(dbUser => {
+        if(!dbUser) {
+            return res.status(404).json({msg: "User not found"})
+        }
 
-    // Remove the user from the users array
-  const deletedUser = User.splice(userIndex, 1)[0];
+        if (req.body.username) {
+            dbUser.username = req.body.username;
+        }
+        if (req.body.email) {
+            dbUser.email = req.body.email;
+        }
+        if (req.body.password) {
+            dbUser.password = req.body.password;
+        }
+        
+        return dbUser.save();
+    }).then(updatedUser => {
+        res.json(updatedUser);
+    }).catch(err => {
+        res.status(500).json({msg:`Server error!`,err});
+    })
+})
 
-     // Respond with a success message and the deleted user data
-  res.json({ message: 'Account deleted successfully', deletedUser });
-});
+// Add profile pic route
+router.put('/pfp/:id', (req, res) => {
+    const pfpUrl = {profile_picture: req.body.profilePicture}
+    User.update(pfpUrl, {
+        where: {
+            id: req.params.id
+        }
+    }).then(updatedUser => {
+        if(!updatedUser) {
+            res.json({msg:"No such user to update."})
+        } else {
+            res.json({msg:"User succesfully updated!"})
+        }
+    }).catch(err => {
+        res.status(500).json({msg:`Server Error!`, err});
+    })
+})
 
-// PUT: Adding profile picture
-router.put('/user/:id/profile-picture', (req, res) => {
-    const userId = req.params.id;
-    const profilePictureUrl = req.body.profilePictureUrl;
+// login route
+router.post('/login', (req, res) => {
+    User.findOne({
+        where: {
+            username: req.body.username
+        }
+    }).then(dbUser => {
+        if(!dbUser) {
+            res.status(401).json({msg: "Incorrect user credentials"});
+        } else if (!dbUser.PasswordAuth(req.body.password)) {
+            res.status(401).json({msg: "Incorrect user credentials"});
+        } else {
+            req.session.user = {
+                id: dbUser.id,
+                username: dbUser.id
+            }
+            res.json({userId: req.session.user.id, username: req.session.user.username})
+        }
+    }).catch(err => {
+        res.status(500).json({msg:`Server Error!`, err});
+    })
+})
 
-    // Find the user by ID
-  const user = User.find((user) => user.id === userId);
 
-   // Check if the user was found
-   if (!user) {
-    // If user not found, send a 404 Not Found response
-    return res.status(404).json({ error: 'User not found' });
-  }
-
-    // Update the user's profile picture URL
-    user.profilePictureUrl = profilePictureUrl;
-
-    // Respond with the updated user data
-    res.json({ message: 'Profile picture updated successfully', user });
-});
 
 module.exports = router;
