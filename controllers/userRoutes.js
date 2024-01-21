@@ -177,4 +177,40 @@ router.delete('/:id', (req, res) => {
     })
 })
 
+// UPDATE user
+router.put('/:id', (req, res) => {
+    const updatedUserData = {
+        username:req.body.username,
+        email:req.body.email,
+        password:req.body.password
+    }
+    User.update(updatedUserData, {
+        where: {
+            id:req.params.id
+        }
+    }).then(dbUser => {
+        res.json(dbUser);
+    }).catch(err => {
+        res.status(500).json({msg:`Server error!`,err});
+    })
+})
+
+// Add profile pic route
+router.put('/pfp/:id', (req, res) => {
+    const pfpUrl = {profilePicture: req.body.profilePicture}
+    User.update(pfpUrl, {
+        where: {
+            id: req.params.id
+        }
+    }).then(updatedUser => {
+        if(!updatedUser) {
+            res.json({msg:"No such user to update."})
+        } else {
+            res.json({msg:"User succesfully updated!"})
+        }
+    }).catch(err => {
+        res.status(500).json({msg:`Server Error!`, err});
+    })
+})
+
 module.exports = router;
