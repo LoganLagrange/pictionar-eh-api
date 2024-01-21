@@ -4,132 +4,164 @@ const { User } = require("../models"); //Imports user model
 const bcrypt = require("bcrypt");
 
 // router.use(bodyParser.json());
-let Users = [];
+// let Users = [];
 
-//GET: Get all users 
-router.get('/users', (req, res) => {
-    res.json(Users);
-  });
+// //GET: Get all users 
+// router.get('/users', (req, res) => {
+//     res.json(Users);
+//   });
 
-//GET: Get one user by ID, include drawings
-router.get('/users/:id', (req, res) => {
-    const user_id = req.params.id;
-    //logic to retreive user and drawings by ID
-    const user = user.find((user) => user.id === user_id);
-    if(!user) {
-        return res.status(404).json({ error: 'User not found'});
-    }
-    const drawings = user.drawings || [];
-    res.json({user, drawings});
-});
+// //GET: Get one user by ID, include drawings
+// router.get('/users/:id', (req, res) => {
+//     const user_id = req.params.id;
+//     //logic to retreive user and drawings by ID
+//     const user = user.find((user) => user.id === user_id);
+//     if(!user) {
+//         return res.status(404).json({ error: 'User not found'});
+//     }
+//     const drawings = user.drawings || [];
+//     res.json({user, drawings});
+// });
 
-// POST: Signup route, creates a new user
-router.post('/signup', (req, res) => {
-    const newUser = req.body;
-    //Required user fields
-    if (!newUser.username || !newUser.email || !newUser.password) {
-        return res.status(400).json({error:'Username, email, and password are required'});
-    } 
+// // POST: Signup route, creates a new user
+// router.post('/signup', (req, res) => {
+//     const newUser = req.body;
+//     //Required user fields
+//     if (!newUser.username || !newUser.email || !newUser.password) {
+//         return res.status(400).json({error:'Username, email, and password are required'});
+//     } 
 
-    const existingUser = user.find(
-        (user) => user.username === newUser.username || user.email === newUser.email
-    );
+//     const existingUser = user.find(
+//         (user) => user.username === newUser.username || user.email === newUser.email
+//     );
 
-    if (existingUser) {
-        return res.status(400).json({error: 'Username or email is already in use.'});
-    }
+//     if (existingUser) {
+//         return res.status(400).json({error: 'Username or email is already in use.'});
+//     }
     
-});
+// });
 
-// POST: Login route
-router.post('/login', async(req, res) => {
-    const {username, password} = req.body;
+// // POST: Login route
+// router.post('/login', async(req, res) => {
+//     const {username, password} = req.body;
 
-    //Validate required fields
-    if (!username || !password) {
-        return res.status(400).json({ error: 'Username and password are required'});
-    }
+//     //Validate required fields
+//     if (!username || !password) {
+//         return res.status(400).json({ error: 'Username and password are required'});
+//     }
 
-    //Find user by username
-    const user = user.find((user) => user.username == username);
+//     //Find user by username
+//     const user = user.find((user) => user.username == username);
 
-    if(!user) {
-        return res.status(401).json({ error: 'Invalid username or password'});
-    }
+//     if(!user) {
+//         return res.status(401).json({ error: 'Invalid username or password'});
+//     }
 
-    try {
-        // Compare provided password with hashed
-        const passwordMatch = user.PasswordAuth(password);
+//     try {
+//         // Compare provided password with hashed
+//         const passwordMatch = user.PasswordAuth(password);
 
-        if (passwordMatch) {
-            res.json({ message: 'Login successful' });
-        } else {
-            // Incorrect password
-            res.status(401).json({ error: 'Invalid username or password' });
-            }
-        } catch (error) {
-            // Handle any errors that might occur during password comparison
-            console.error('Error comparing passwords:', error);
-            res.status(500).json({ error: 'Internal Server Error' });
-          }
-    });
+//         if (passwordMatch) {
+//             res.json({ message: 'Login successful' });
+//         } else {
+//             // Incorrect password
+//             res.status(401).json({ error: 'Invalid username or password' });
+//             }
+//         } catch (error) {
+//             // Handle any errors that might occur during password comparison
+//             console.error('Error comparing passwords:', error);
+//             res.status(500).json({ error: 'Internal Server Error' });
+//           }
+//     });
 
-// DELETE: Logout route
-router.delete('/logout', (req, res) => {
-    if (req.session) {
-        //Destroy user's session
-        req.session.destroy((err) => {
-            if (err) {
-                console.error('Error destroying session:', err);
-                return res.status(500).json({ error: 'Internal Server Error' });
-              }
-            // Respond with a success message
-            res.status(200).json({ message: 'Logout successful' });
-        });
-    } else {
-      // If there's no session, respond with an error
-      res.status(400).json({ error: 'No active session to logout from' });
-    }
-});
+// // DELETE: Logout route
+// router.delete('/logout', (req, res) => {
+//     if (req.session) {
+//         //Destroy user's session
+//         req.session.destroy((err) => {
+//             if (err) {
+//                 console.error('Error destroying session:', err);
+//                 return res.status(500).json({ error: 'Internal Server Error' });
+//               }
+//             // Respond with a success message
+//             res.status(200).json({ message: 'Logout successful' });
+//         });
+//     } else {
+//       // If there's no session, respond with an error
+//       res.status(400).json({ error: 'No active session to logout from' });
+//     }
+// });
 
-// DELETE: Delete account route
-router.delete('/user/:id', (req, res) => {
-    const userId = req.params.id;
-    // Find the index of the user with the specified ID
-  const userIndex = User.findIndex((user) => user.id === userId);
+// // DELETE: Delete account route
+// router.delete('/user/:id', (req, res) => {
+//     const userId = req.params.id;
+//     // Find the index of the user with the specified ID
+//   const userIndex = User.findIndex((user) => user.id === userId);
 
-  // Check if the user was found
-  if (userIndex === -1) {
-    // If user not found, send a 404 Not Found response
-    return res.status(404).json({ error: 'User not found' });
-  }
+//   // Check if the user was found
+//   if (userIndex === -1) {
+//     // If user not found, send a 404 Not Found response
+//     return res.status(404).json({ error: 'User not found' });
+//   }
 
-    // Remove the user from the users array
-  const deletedUser = User.splice(userIndex, 1)[0];
+//     // Remove the user from the users array
+//   const deletedUser = User.splice(userIndex, 1)[0];
 
-     // Respond with a success message and the deleted user data
-  res.json({ message: 'Account deleted successfully', deletedUser });
-});
+//      // Respond with a success message and the deleted user data
+//   res.json({ message: 'Account deleted successfully', deletedUser });
+// });
 
-// PUT: Adding profile picture
-router.put('/user/:id/profile-picture', (req, res) => {
-    const userId = req.params.id;
-    const profilePictureUrl = req.body.profilePictureUrl;
+// // PUT: Adding profile picture
+// router.put('/user/:id/profile-picture', (req, res) => {
+//     const userId = req.params.id;
+//     const profilePictureUrl = req.body.profilePictureUrl;
 
-    // Find the user by ID
-  const user = User.find((user) => user.id === userId);
+//     // Find the user by ID
+//   const user = User.find((user) => user.id === userId);
 
-   // Check if the user was found
-   if (!user) {
-    // If user not found, send a 404 Not Found response
-    return res.status(404).json({ error: 'User not found' });
-  }
+//    // Check if the user was found
+//    if (!user) {
+//     // If user not found, send a 404 Not Found response
+//     return res.status(404).json({ error: 'User not found' });
+//   }
 
-    // Update the user's profile picture URL
-    user.profilePictureUrl = profilePictureUrl;
+//     // Update the user's profile picture URL
+//     user.profilePictureUrl = profilePictureUrl;
 
-    // Respond with the updated user data
-    res.json({ message: 'Profile picture updated successfully', user });
-});
+//     // Respond with the updated user data
+//     res.json({ message: 'Profile picture updated successfully', user });
+// });
+
+// GET all users
+router.get("/", (req, res) => {
+    User.findAll().then(dbUsers => {
+        res.json(dbUsers);
+    }).catch(err => {
+        res.status(500).json({msg:`Server Error!`, err});
+    })
+})
+
+// GET one user
+router.get('/:id', (req, res) => {
+    User.findByPk(req.params.id, {
+    }).then(dbUser => {
+        res.json(dbUser);
+    }).catch(err => {
+        res.status(500).json({msg:`Server Error!`, err});
+    })
+})
+
+// CREATE new user
+router.post('/', (req, res) => {
+    User.create({
+        username:req.body.username,
+        email:req.body.email,
+        password:req.body.password
+    }).then(newUser => {
+        res.json(newUser);
+    }).catch(err => {
+        res.status(500).json({msg:`Server error!`,err});
+    })
+})
 
 module.exports = router;
