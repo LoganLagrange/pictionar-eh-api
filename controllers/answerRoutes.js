@@ -62,4 +62,22 @@ router.get('/random', (req, res) => {
     })
 })
 
+// UPDATE answer
+router.put('/:id', (req, res)  => {
+    updatedData = {
+        word: req.body.word
+    }
+    Answer.update(updatedData, {
+        where: {id: req.params.id}
+    }).then(updatedAnswer => {
+        if(!updatedAnswer) {
+            res.json({msg:"No such answer to update."})
+        } else {
+            res.json({msg:"Answer succesfully updated!"})
+        }
+    }).catch(err => {
+        res.status(500).json({msg:`Server Error!`, err});
+    })
+})
+
 module.exports = router;
