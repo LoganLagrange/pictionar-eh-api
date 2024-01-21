@@ -61,3 +61,5 @@ router.get('/random', (req, res) => {
         res.status(500).json({msg:`Server Error!`, err});
     })
 })
+
+module.exports = router;
