@@ -153,6 +153,7 @@ router.get('/:id', (req, res) => {
 
 // CREATE new user
 router.post('/', (req, res) => {
+    console.log(req.body);
     User.create({
         username:req.body.username,
         email:req.body.email,
@@ -160,8 +161,22 @@ router.post('/', (req, res) => {
     }).then(newUser => {
         res.json(newUser);
     }).catch(err => {
+        console.log("error creating user:", err)
         res.status(500).json({msg:`Server error!`,err});
     })
+})
+
+// LOGOUT route
+router.delete('/logout', (req, res) => {
+    if(req.session) {
+        req.session.destroy(err => {
+            if(!err) {
+                res.status(200).json({msg: "Logged out!"})
+            } else {
+                res.status(500).json({msg: "Server error!", err})
+            }
+        })
+    }
 })
 
 // DELETE user
@@ -177,19 +192,26 @@ router.delete('/:id', (req, res) => {
     })
 })
 
-// UPDATE user
 router.put('/:id', (req, res) => {
-    const updatedUserData = {
-        username:req.body.username,
-        email:req.body.email,
-        password:req.body.password
-    }
-    User.update(updatedUserData, {
-        where: {
-            id:req.params.id
+    User.findByPk(req.params.id)
+    .then(dbUser => {
+        if(!dbUser) {
+            return res.status(404).json({msg: "User not found"})
         }
-    }).then(dbUser => {
-        res.json(dbUser);
+
+        if (req.body.username) {
+            dbUser.username = req.body.username;
+        }
+        if (req.body.email) {
+            dbUser.email = req.body.email;
+        }
+        if (req.body.password) {
+            dbUser.password = req.body.password;
+        }
+        
+        return dbUser.save();
+    }).then(updatedUser => {
+        res.json(updatedUser);
     }).catch(err => {
         res.status(500).json({msg:`Server error!`,err});
     })
@@ -197,7 +219,7 @@ router.put('/:id', (req, res) => {
 
 // Add profile pic route
 router.put('/pfp/:id', (req, res) => {
-    const pfpUrl = {profilePicture: req.body.profilePicture}
+    const pfpUrl = {profile_picture: req.body.profilePicture}
     User.update(pfpUrl, {
         where: {
             id: req.params.id
@@ -212,5 +234,30 @@ router.put('/pfp/:id', (req, res) => {
         res.status(500).json({msg:`Server Error!`, err});
     })
 })
+
+// login route
+router.post('/login', (req, res) => {
+    User.findOne({
+        where: {
+            username: req.body.username
+        }
+    }).then(dbUser => {
+        if(!dbUser) {
+            res.status(401).json({msg: "Incorrect user credentials"});
+        } else if (!dbUser.PasswordAuth(req.body.password)) {
+            res.status(401).json({msg: "Incorrect user credentials"});
+        } else {
+            req.session.user = {
+                id: dbUser.id,
+                username: dbUser.id
+            }
+            res.json({userId: req.session.user.id, username: req.session.user.username})
+        }
+    }).catch(err => {
+        res.status(500).json({msg:`Server Error!`, err});
+    })
+})
+
+
 
 module.exports = router;
