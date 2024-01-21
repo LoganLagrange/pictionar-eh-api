@@ -30,9 +30,7 @@ router.get(`/:id`,(req,res) => {
 router.post(`/`,(req,res) => {
     console.log(req.body)
     Answer.create({
-        filename:req.body.filename,
-        userId: req.body.userId,
-        answerId: req.body.answerId
+        word: req.body.word
     }).then(dbAnswer => {
         res.json(dbAnswer)
     }).catch(err => {
