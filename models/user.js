@@ -17,7 +17,8 @@ User.init({
     },
     username: {
         type: DataTypes.STRING(50),
-        allowNull: false
+        allowNull: false,
+        unique: true
     },
     password: {
         type: DataTypes.STRING(80),
@@ -25,7 +26,8 @@ User.init({
     },
     email: {
         type: DataTypes.STRING(50),
-        allowNull: true
+        allowNull: true,
+        unique: true
     },
     profile_picture: {
         type: DataTypes.STRING(50),

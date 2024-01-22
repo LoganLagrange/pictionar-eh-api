@@ -13,7 +13,8 @@ Answer.init(
     },
     word: {
       type: DataTypes.STRING(255),
-      allowNull: false
+      allowNull: false,
+      unique: true
     }
   },
   {
