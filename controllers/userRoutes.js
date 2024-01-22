@@ -30,6 +30,10 @@ router.post('/', (req, res) => {
         email:req.body.email,
         password:req.body.password
     }).then(newUser => {
+        req.session.user = {
+            id: dbUser.id,
+            username: dbUser.id
+        }
         res.json(newUser);
     }).catch(err => {
         console.log("error creating user:", err)
