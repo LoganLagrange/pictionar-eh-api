@@ -160,7 +160,7 @@ const seedData = async() => {
     await sequelize.sync({ force: true });
 
     const dbUsers = await User.bulkCreate(userData, {
-        individualHoooks: true
+        individualHooks: true
     });
     console.table(dbUsers.map(User => User.toJSON()));
 
