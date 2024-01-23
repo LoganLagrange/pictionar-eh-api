@@ -12,7 +12,7 @@ Drawing.init(
       allowNull: false
     },
     filename: {
-      type: DataTypes.STRING(50),
+      type: DataTypes.TEXT,
       allowNull: false
     }
   },
