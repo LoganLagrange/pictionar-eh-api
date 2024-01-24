@@ -3,9 +3,11 @@ const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = require("./config/connection");
 const session = require('express-session');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
+const CORS = require("cors")
 
 // Initialize Express
 const app = express();
+app.use(CORS());
 const PORT = process.env.PORT || 3001;
 
 // Session configuration
