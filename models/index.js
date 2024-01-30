@@ -1,6 +1,6 @@
-const User = require("./user");
-const Drawing = require("./drawing");
-const Answer = require("./answer");
+const User = require("./User");
+const Drawing = require("./Drawing");
+const Answer = require("./Answer");
 
 // Drawing to User associations
 Drawing.belongsTo(User, {

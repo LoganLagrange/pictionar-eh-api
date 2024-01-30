@@ -4,11 +4,20 @@ const { Drawing } = require("../models"); //Imports user model
 
 // GET all drawings
 router.get(`/`,(req,res) => {
-    Drawing.findAll().then(dbDrawings => {
-        res.json(dbDrawings);
-    }).catch(err => {
-        res.status(500).json({msg:`Server Error!`, err});
-    })
+    const token = req?.headers?.authorization?.split(" ")[1];
+    console.log(token)
+    console.log('==============================')
+    try {
+            const decoded = jwt.verify(token,process.env.JWT_SECRET);
+            Drawing.findAll().then(dbDrawings => {
+                return res.json(dbDrawings);
+        }).catch(err => {
+            return res.status(500).json({msg:`Server Error!`, err});
+        })
+    } catch(err){
+        console.log(err);
+    return  res.status(403).json({msg:"invalid token!"})
+    }
 })
 
 // GET all drawings for given user
