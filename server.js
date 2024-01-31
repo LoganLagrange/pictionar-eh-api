@@ -1,40 +1,30 @@
 const express = require('express');
-const { Sequelize, DataTypes } = require('sequelize');
+const allRoutes = require('./controllers')
+const cors = require("cors");
 const sequelize = require("./config/connection");
-const session = require('express-session');
-const SequelizeStore = require('connect-session-sequelize')(session.Store);
-const CORS = require("cors")
 
+//Sets up the Express App
+//================================================
 // Initialize Express
 const app = express();
-app.use(CORS());
+app.use(cors());
 const PORT = process.env.PORT || 3001;
 
-// Session configuration
-const sess = {
-    secret: process.env.SESSION_SECRET,
-    cookie: {
-        maxAge: 1000 * 60 * 60 * 2
-    },
-    resave: false,
-    saveUninitialized: true,
-    store: new SequelizeStore({
-        db: sequelize
-    })
-};
+const { User, Drawing, Answer} = require('./models');
 
-app.use(session(sess));
+//Sets up the Express app to handle data parsing
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-const allRoutes = require("./controllers");
-app.use(allRoutes);
+app.use('/',allRoutes);
 
-
+// app.get('/',(req,res)=>{
+//     res.send('Hello World');
+// })
 
 // Start the server
 sequelize.sync({ force: false }).then(function () {
     app.listen(PORT, function () {
         console.log('App listening on PORT ' + PORT);
     });
-})
+});

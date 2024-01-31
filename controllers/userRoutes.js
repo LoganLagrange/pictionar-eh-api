@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const { User } = require("../models"); //Imports user model
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const withTokenAuth = require("../middleware/withTokenAuth");
 
 // GET all users
 router.get("/", (req, res) => {
@@ -123,17 +125,25 @@ router.post('/login', (req, res) => {
         } else if (!dbUser.PasswordAuth(req.body.password)) {
             res.status(401).json({msg: "Incorrect user credentials"});
         } else {
-            req.session.user = {
-                id: dbUser.id,
-                username: dbUser.id
-            }
-            res.json({userId: req.session.user.id, username: req.session.user.username})
+            const token = jwt.sign({
+                id:foundUser.id,
+                username:foundUser.username
+            },process.env.JWT_SECRET, {
+                expiresIn:"2h"
+            })
+            console.log('token', token)
+            res.json({
+                token:token,
+                user:foundUser
+            })
         }
     }).catch(err => {
         res.status(500).json({msg:`Server Error!`, err});
     })
 })
 
-
+router.post("/",withTokenAuth,(req,res)=>{
+    res.json({msg:"test"})
+})
 
 module.exports = router;
