@@ -14,6 +14,10 @@ router.get(`/`,(req,res) => {
             }).catch(err => {
                 res.status(500).json({msg:`Server Error!`, err});
             })
+        }catch(err){
+            console.log(err);
+        return  res.status(403).json({msg:"invalid token!"})
+        }
 })
 
 // GET random answer
