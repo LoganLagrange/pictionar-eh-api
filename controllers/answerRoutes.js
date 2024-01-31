@@ -4,11 +4,16 @@ const { Answer } = require("../models"); //Imports answer model
 
 // GET all answers
 router.get(`/`,(req,res) => {
-    Answer.findAll().then(dbAnswers => {
-        res.json(dbAnswers);
-    }).catch(err => {
-        res.status(500).json({msg:`Server Error!`, err});
-    })
+    const token = req?.headers?.authorization?.split(" ")[1];
+    console.log(token)
+    console.log('==============================')
+    try {
+            const decoded = jwt.verify(token,process.env.JWT_SECRET);
+            Answer.findAll().then(dbAnswers => {
+                res.json(dbAnswers);
+            }).catch(err => {
+                res.status(500).json({msg:`Server Error!`, err});
+            })
 })
 
 // GET random answer
