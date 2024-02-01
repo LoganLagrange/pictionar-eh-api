@@ -47,6 +47,7 @@ router.post('/', (req, res) => {
         console.log("error creating user:", err);
         res.status(500).json({ msg: `Server error!`, err });
     });
+    console.log(req.body);
 });
 
 // LOGOUT route
