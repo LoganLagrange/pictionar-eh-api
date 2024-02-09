@@ -93,6 +93,9 @@ router.put('/:id', (req, res) => {
             if (req.body.password) {
                 dbUser.password = req.body.password;
             }
+            if (req.body.highscore) {
+                dbUser.highscore = req.body.highscore
+            }
 
             return dbUser.save();
         }).then(updatedUser => {
