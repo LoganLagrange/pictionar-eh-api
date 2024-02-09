@@ -47,6 +47,7 @@ router.post('/', (req, res) => {
         console.log("error creating user:", err);
         res.status(500).json({ msg: `Server error!`, err });
     });
+    console.log(req.body);
 });
 
 // LOGOUT route
@@ -91,6 +92,9 @@ router.put('/:id', (req, res) => {
             }
             if (req.body.password) {
                 dbUser.password = req.body.password;
+            }
+            if (req.body.highscore) {
+                dbUser.highscore = req.body.highscore
             }
 
             return dbUser.save();
