@@ -5,20 +5,24 @@ const userData = [{
         username: `Logan`,
         password: `123456789`,
         email: `logan@gmail.com`,
+        highcore: 0
     },
     {
         username: `Maria`,
         password: `123456789`,
         email: `maria@gmail.com`,
+        highscore: 0
     },
     {
         username: `Thom`,
         password: `123456789`,
         email: `thom@gmail.com`,
+        highscore: 0
     }, {
         username: `Vinit`,
         password: `123456789`,
         email: `vinit@gmail.com`,
+        highscore: 0
     }
 ]
 
